@@ -29,6 +29,20 @@
             opacity: 0.75;
         }
 
+        #cover > .next {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-color: transparent;
+            transition: background-color 3s
+        }
+
+        #cover > .next.active {
+            background-color: white;
+        }
+
         #intro .next {
             opacity: 0;
             transition: opacity 3s;
@@ -63,6 +77,7 @@
     <img src="samples/cover.jpg" alt="Разноцветные гибкие пластинки" class="cover w h">
     <h2>Все цвета радуги</h2>
     <p>Владимир Кузнецов</p>
+    <div class="next"></div>
 </section>
 
 <section class="slide clear" id="intro">
