@@ -76,13 +76,8 @@
     var imageAfterPromise = new Promise(function (resolve) {
         $('#image-before').bindImageLoad(resolve);
     });
-    var windowPromise = new Promise(function (resolve) {
-        $(function () {
-            resolve();
-        });
-    });
 
-    Promise.all([imageBeforePromise, imageAfterPromise, windowPromise])
+    Promise.all([imageBeforePromise, imageAfterPromise])
         .then(function () {
             $('.container').twentytwenty({
                 before_label: 'sRGB',
