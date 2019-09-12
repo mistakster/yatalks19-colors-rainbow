@@ -42,19 +42,53 @@
     <span class="space rec2020">Rec.2020</span>
 </p>
 <div class="container twentytwenty-container">
-    <img src="test-picture-srgb.jpg" alt="Test picture sRGB">
-    <img src="test-picture-p3.jpg" alt="Test picture DCI-P3">
+    <img src="test-picture-srgb.jpg" alt="Test picture sRGB" id="image-before">
+    <img src="test-picture-p3.jpg" alt="Test picture DCI-P3" id="image-after">
 </div>
 <script src="twentytwenty/jquery-3.4.1.min.js"></script>
 <script src="twentytwenty/jquery.event.move.js"></script>
 <script src="twentytwenty/jquery.twentytwenty.js"></script>
 <script>
-    $(function () {
-        $('.container').twentytwenty({
-            before_label: 'sRGB',
-            after_label: 'DCI-P3'
+    (function ($) {
+        $.fn.bindImageLoad = function (callback) {
+            function isImageLoaded(img) {
+                if (!img.complete) {
+                    return false;
+                }
+                return !(typeof img.naturalWidth !== 'undefined' && img.naturalWidth === 0);
+            }
+
+            return this.each(function () {
+                var ele = $(this);
+                if (ele.is('img') && $.isFunction(callback)) {
+                    ele.one('load', callback);
+                    if (isImageLoaded(this)) {
+                        ele.trigger('load');
+                    }
+                }
+            });
+        };
+    })(jQuery);
+
+    var imageBeforePromise = new Promise(function (resolve) {
+        $('#image-before').bindImageLoad(resolve);
+    });
+    var imageAfterPromise = new Promise(function (resolve) {
+        $('#image-before').bindImageLoad(resolve);
+    });
+    var windowPromise = new Promise(function (resolve) {
+        $(function () {
+            resolve();
         });
     });
+
+    Promise.all([imageBeforePromise, imageAfterPromise, windowPromise])
+        .then(function () {
+            $('.container').twentytwenty({
+                before_label: 'sRGB',
+                after_label: 'DCI-P3'
+            });
+        });
 </script>
 </body>
 </html>
